@@ -1,15 +1,15 @@
 #ifndef HOTEL_H_
 #define HOTEL_H_
 
-typedef struct{
+typedef struct {
 	char name[20];
 	int estrellas;
-}Hotel;
+} Hotel;
 
-typedef struct{
-	Hotel * hoteles;
+typedef struct {
+	Hotel *hoteles;
 	int numHoteles;
-}Hoteles;
+} Hoteles;
 
 void imprimirHotel(Hotel*);
 
