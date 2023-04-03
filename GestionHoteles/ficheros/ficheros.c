@@ -6,6 +6,7 @@
  */
 
 #include "ficheros.h"
+#include <stdlib.h>
 
 void guardarReserva(char cod_Reserva[], char fa_ini[], char fa_fin[], char id_hotel[], int num_Personas, char importe[]) {
        // Abrir el fichero de reservas en modo "append" para agregar la nueva reserva al final del fichero
@@ -18,3 +19,18 @@ void guardarReserva(char cod_Reserva[], char fa_ini[], char fa_fin[], char id_ho
        // Cerrar el fichero de reservas
        fclose(fichero);
    }
+
+void guardarHotel(int id, char nom[20], int numEst, int idProv) {
+    FILE *fichero;
+
+    fichero = fopen("hoteles.txt", "a");
+    if (fichero == NULL) {
+        printf("Error al abrir el fichero.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    fprintf(fichero, "%d %s %d %d\n", id, nom, numEst, idProv);
+
+    fclose(fichero);
+}
+
