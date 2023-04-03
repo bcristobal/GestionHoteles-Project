@@ -7,6 +7,8 @@
 
 #include <stdio.h>
 #include <time.h>
+#include "log.h"
+
 
 void logMensaje(char* mensaje) {
    time_t t = time(NULL);
