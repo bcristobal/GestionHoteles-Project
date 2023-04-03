@@ -91,16 +91,18 @@ int initProvincias (Provincias* provincias, sqlite3 *db) {
 	else {
 		printf("SQL query prepared (SELECT)\n");
 	}
-	Provincia *prov = malloc(sizeof(Provincia));
-	do {
+	(*provincias).numProvincias = contarProvincias(db);
+	Provincia *prov;
+	for (int i = 0; i < (*provincias).numProvincias; ++i) {
+		prov = malloc(sizeof(Provincia));
 		result = sqlite3_step(stmt) ;
 		if (result == SQLITE_ROW) {
 			(*prov).id = sqlite3_column_int(stmt, 0);
 			strcpy((*prov).name, (char *) sqlite3_column_text(stmt, 1));
-
-
 		}
-	} while (result == SQLITE_ROW);
+		provincias[i] = prov;
+	}
+
 
 
 	result = sqlite3_finalize(stmt);
