@@ -7,6 +7,7 @@
 
 #include "ficheros.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 void guardarReserva(char cod_Reserva[], char fa_ini[], char fa_fin[], char id_hotel[], int num_Personas, char importe[]) {
        // Abrir el fichero de reservas en modo "append" para agregar la nueva reserva al final del fichero
