@@ -41,7 +41,6 @@ void menuProvinciasHoteles(Provincias* provincias, Hoteles* hoteles, sqlite3* db
 	int opcion;
 	printf("\n\n\n=================\nMOSTRAR HOTELES\n=================");
 	printf("\nProvincias:\n");
-	//Ejemplo Hardcodeado
 	int n;
 	for (n = 0; n < provincias->numProvincias; ++n) {
 		printf("%d. ", n + 1);
@@ -87,7 +86,56 @@ Hotel menuAnadirHotel (Provincias* provincias) {
 		scanf("%i", &idProv);
 	} while (idProv < 0 || idProv > (*provincias).numProvincias - 1);
 	hotel.provincia = &((*provincias).provincias[idProv]);
+
 	return hotel;
+}
+
+void menuEliminarHotel (Provincias* provincias, Hoteles * hoteles, sqlite3* db) {
+	char str[10];
+	int opcion;
+	printf("=================\nELIMINAR HOTEL\n=================\n");
+	int n;
+	for (n = 0; n < provincias->numProvincias; ++n) {
+		printf("%d. ", provincias->provincias[n].id + 1);
+		imprimirProvincia(&provincias->provincias[n]);
+	}
+	printf("%d. Atras\n", n + 1);
+	printf("Opcion: ");
+	fflush(stdout);
+	fgets(str, 10, stdin);
+	sscanf(str, "%d", &opcion);
+	opcion--;
+	if (provincias->provincias[opcion].id == opcion) {
+		printf("opcion provincias check\n");
+		printf("\n\n\n=================\nMOSTRAR HOTELES\n=================");
+		int j;
+		char nombreProvincia[20];
+		strcpy(nombreProvincia, provincias->provincias[opcion].name);
+		printf("\nHoteles de la provincia de %s:\n", nombreProvincia);
+		for (j = 0; j < hoteles->numHoteles; ++j) {
+			if (strcmp(hoteles->hoteles[j].provincia->name, nombreProvincia) == 0){
+				printf("ID: %d Nombre: ", hoteles->hoteles[j].id);
+				imprimirHotel(&hoteles->hoteles[j]);
+			}
+		}
+		printf("Opcion: ");
+		fflush(stdout);
+		fgets(str, 10, stdin);
+		sscanf(str, "%d", &opcion);
+		for (int i = 0; i < hoteles->numHoteles; ++i) {
+			if (opcion == hoteles->hoteles[i].id) {
+				eliminarHotel(&hoteles->hoteles[i], db);
+			}
+		}
+
+	} else if (opcion == n + 1) {
+		printf("\n\n\n");
+		menuAdmin(provincias, hoteles, db);
+	} else {
+		printf("Opcion incorrecta!!!\n");
+		menuEliminarHotel(provincias, hoteles, db);
+	}
+
 }
 
 void menuAdmin(Provincias *provincias, Hoteles* hoteles, sqlite3* db) {
@@ -101,30 +149,22 @@ void menuAdmin(Provincias *provincias, Hoteles* hoteles, sqlite3* db) {
 	fflush(stdout);
 	fgets(str, 3, stdin);
 	sscanf(str, "%d", &opcion);
-	switch (opcion) {
-	case 1: //MOSTRAR HOTELES
+	if(opcion == 1){ //MOSTRAR HOTELES
 		menuProvinciasHoteles(provincias, hoteles, db);
-		break;
-	case 2: //ANADIR HOTEL
-		printf("Prueba\n");
-		Hotel hotel = menuAnadirHotel(provincias);
+	} else if(opcion == 2){ //ANADIR HOTEL
+		Hotel hotel;
+		hotel = menuAnadirHotel(provincias);
 		imprimirHotel(&hotel);
 		insertarHotel(&hotel, db);
-
-		break;
-	case 3: //ELIMINAR HOTEL
+	} else if(opcion == 3){ //ELIMINAR HOTEL
+		menuEliminarHotel(provincias, hoteles, db);
+	} else if(opcion == 4){ //MOSTRAR RESERVAS
 		printf("Prueba");
-		break;
-	case 4: //MOSTRAR RESERVAS
-		printf("Prueba");
-		break;
-	case 5: //SALIR
+	} else if(opcion == 5){ //SALIR
 		printf("\nGracias por utilizar nuestros sevicios!");
-		break;
-	default: //ELSE
+	}else {
 		printf("\nOpcion incorrecta!!!\n");
 		menuAdmin(provincias, hoteles, db);
-		break;
 	}
 }
 

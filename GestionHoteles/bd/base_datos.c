@@ -153,7 +153,7 @@ int contarHoteles(sqlite3 *db) {
 
 int initHoteles (Hoteles * hoteles, sqlite3 *db, Provincias * provincias) {
 	sqlite3_stmt *stmt;
-	char sql[] = "SELECT h.ID_HOTEL, h.NOM_HOTEL, h.NUM_ESTTRELLAS, h.ID_PROV FROM HOTEL h";
+	char sql[] = "SELECT ID_HOTEL, NOM_HOTEL, NUM_ESTTRELLAS, ID_PROV FROM HOTEL";
 
 	int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
 	if (result != SQLITE_OK) {
@@ -237,7 +237,7 @@ int insertarHotel (Hotel * hotel, sqlite3 *db) {
 
 int eliminarHotel (Hotel * hotel, sqlite3 *db) {
 	sqlite3_stmt *stmt;
-	char sql[] = "DELETE FROM HOTEL h WHERE h.ID_HOTEL == ?";
+	char sql[] = "DELETE FROM HOTEL WHERE ID_HOTEL == ?";
 
 	int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
 
@@ -254,9 +254,10 @@ int eliminarHotel (Hotel * hotel, sqlite3 *db) {
 
 	result = sqlite3_step(stmt);
 	if (result != SQLITE_DONE) {
-		printf("Error insertando el hotel\n");
+		logMensaje("Error eliminado el hotel\n");
 	}else{
-		printf("Hotel %s insertado\n", hotel->name);
+		strcpy(mensaje, strcat("Hotel %s eliminado\n", hotel->name));
+		logMensaje(mensaje);
 	}
 
 	result = sqlite3_finalize(stmt);
