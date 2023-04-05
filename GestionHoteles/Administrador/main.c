@@ -14,7 +14,7 @@ void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles) {
 	strcpy(nombreProvincia, provincias->provincias[eleccion].name);
 	printf("\nHoteles de la provincia de %s", nombreProvincia);
 	for (n = 0; n < hoteles->numHoteles; ++n) {
-		if (hoteles->hoteles[n].provincia.name == nombreProvincia) {
+		if (hoteles->hoteles[n].provincia->name == nombreProvincia) {
 			imprimirHotel(&hoteles->hoteles[n]);
 		}
 
@@ -105,7 +105,7 @@ int main(void) {
 	Hoteles * hoteles = (Hoteles *) malloc(sizeof(Hoteles));
 	hoteles->hoteles = malloc(hoteles->numHoteles * sizeof(Hotel));
 	hoteles->numHoteles = contarHoteles(db);
-	initHoteles(hoteles, db);
+	initHoteles(hoteles, db, provincias);
 
 	//------------------------------------------------------------------
 	//ANADIR HOTELES A UNA PROVINCIA (para probar la funcionalidad) (sin bd)
@@ -115,7 +115,7 @@ int main(void) {
 
 	//------------------------------------------------------------------
 	//INICIAR MENU
-	menuAdmin(provincias);
+	menuAdmin(provincias, hoteles);
 
 	//------------------------------------------------------------------
 	//CERRAR LA BD

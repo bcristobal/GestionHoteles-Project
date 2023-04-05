@@ -7,7 +7,7 @@ typedef struct {
 	int id;
 	char name[50];
 	int estrellas;
-	Provincia provincia;
+	Provincia* provincia;
 } Hotel;
 
 typedef struct {

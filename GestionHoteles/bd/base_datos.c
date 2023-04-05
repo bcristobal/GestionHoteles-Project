@@ -166,7 +166,7 @@ int initHoteles (Hoteles * hoteles, sqlite3 *db, Provincias * provincias) {
 			(*hoteles).hoteles[i].estrellas = sqlite3_column_int(stmt, 2);
 			for (int n = 0; n < contarProvincias(db); ++n) {
 				if (provincias->provincias[n].id == sqlite3_column_int(stmt, 3)) {
-					(*hoteles).hoteles[i].provincia = provincias->provincias[n];
+					*(*hoteles).hoteles[i].provincia = (*provincias).provincias[n];
 				}
 			}
 
