@@ -209,9 +209,9 @@ int insertarHotel (Hotel * hotel, sqlite3 *db) {
 		strcpy(mensaje,"SQL query prepared (SELECT)\n");
 		logMensaje(mensaje);
 	}
-	char *nombre = malloc(50 * sizeof(char));
+	char nombre[50];
 	strcpy(nombre, hotel->name);
-	result = sqlite3_bind_text(stmt, 1, *nombre, strlen(*nombre) + 1, SQLITE_STATIC);
+	result = sqlite3_bind_text(stmt, 1, nombre, strlen(nombre) + 1, SQLITE_STATIC);
 	result = sqlite3_bind_int(stmt, 2, hotel->estrellas);
 	result = sqlite3_bind_int(stmt, 3, hotel->provincia->id);
 
@@ -232,7 +232,6 @@ int insertarHotel (Hotel * hotel, sqlite3 *db) {
 		strcpy(mensaje, "Prepared statement finalized (SELECT)\n");
 		logMensaje(mensaje);
 	}
-	free(nombre);
 	return result;
 }
 
