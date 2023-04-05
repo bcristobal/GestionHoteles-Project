@@ -12,12 +12,11 @@ void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles) {
 	int n;
 	char nombreProvincia[20];
 	strcpy(nombreProvincia, provincias->provincias[eleccion].name);
-	printf("\nHoteles de la provincia de %s", nombreProvincia);
+	printf("\nHoteles de la provincia de %s:\n", nombreProvincia);
 	for (n = 0; n < hoteles->numHoteles; ++n) {
-		if (hoteles->hoteles[n].provincia->name == nombreProvincia) {
+		if (strcmp(hoteles->hoteles[n].provincia->name, nombreProvincia) == 0){
 			imprimirHotel(&hoteles->hoteles[n]);
 		}
-
 	}
 }
 
@@ -109,9 +108,7 @@ int main(void) {
 
 	//------------------------------------------------------------------
 	//ANADIR HOTELES A UNA PROVINCIA (para probar la funcionalidad) (sin bd)
-//	provincias->provincias[1].hoteles.hoteles = (Hotel*) malloc(3 * sizeof(Hotel));
-//	provincias->provincias[1].hoteles = *hoteles;
-//	provincias->provincias[1].hoteles.numHoteles = 3;
+
 
 	//------------------------------------------------------------------
 	//INICIAR MENU
