@@ -14,7 +14,7 @@ int contarProvincias(sqlite3*);
 int initProvincias (Provincias*, sqlite3*);
 int contarHoteles(sqlite3*);
 int initHoteles (Hoteles*, sqlite3*, Provincias*);
-int insertarHotel (Hotel *, sqlite3*, Provincia*);
+int insertarHotel (Hotel *, sqlite3*);
 int eliminarHotel (Hotel*, sqlite3*);
 
 #endif /* BASE_DATOS_H_ */

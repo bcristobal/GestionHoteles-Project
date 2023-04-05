@@ -195,7 +195,7 @@ int initHoteles (Hoteles * hoteles, sqlite3 *db, Provincias * provincias) {
 
 }
 
-int insertarHotel (Hotel * hotel, sqlite3 *db, Provincia* provincia) {
+int insertarHotel (Hotel * hotel, sqlite3 *db) {
 	sqlite3_stmt *stmt;
 	char sql[] = "INSERT INTO HOTEL (NOM_HOTEL, NUM_ESTTRELLAS, ID_PROV) VALUES (?, ?, ?)";
 
@@ -209,8 +209,9 @@ int insertarHotel (Hotel * hotel, sqlite3 *db, Provincia* provincia) {
 		strcpy(mensaje,"SQL query prepared (SELECT)\n");
 		logMensaje(mensaje);
 	}
-
-	result = sqlite3_bind_text(stmt, 1, hotel->name, strlen(hotel->name) + 1, SQLITE_STATIC);
+	char *nombre = malloc(50 * sizeof(char));
+	strcpy(nombre, hotel->name);
+	result = sqlite3_bind_text(stmt, 1, *nombre, strlen(*nombre) + 1, SQLITE_STATIC);
 	result = sqlite3_bind_int(stmt, 2, hotel->estrellas);
 	result = sqlite3_bind_int(stmt, 3, hotel->provincia->id);
 
@@ -231,7 +232,7 @@ int insertarHotel (Hotel * hotel, sqlite3 *db, Provincia* provincia) {
 		strcpy(mensaje, "Prepared statement finalized (SELECT)\n");
 		logMensaje(mensaje);
 	}
-
+	free(nombre);
 	return result;
 }
 
