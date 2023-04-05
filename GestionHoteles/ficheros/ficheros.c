@@ -1,10 +1,3 @@
-/*
- * ficheros.c
- *
- *  Created on: Apr 3, 2023
- *      Author: unaialonso
- */
-
 #include "ficheros.h"
 #include <stdlib.h>
 #include <stdio.h>

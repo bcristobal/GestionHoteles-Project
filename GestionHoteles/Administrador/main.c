@@ -5,7 +5,8 @@
 #include "../hotel/hotel.h"
 #include "../bd/base_datos.h"
 
-int salir = 0;
+char BD[20];
+char version_app[20];
 
 void menuAdmin(Provincias *provincias, Hoteles* hoteles, sqlite3* db);
 void loginAdmin (sqlite3* db);
@@ -25,7 +26,7 @@ void loginAdmin (sqlite3* db) {
 	} while (validar != 0);
 }
 
-void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles) {
+void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles, sqlite3 * bd) {
 	printf("\n\n\n=================\nMOSTRAR HOTELES\n=================");
 	int n;
 	char nombreProvincia[20];
@@ -35,6 +36,15 @@ void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles) {
 		if (strcmp(hoteles->hoteles[n].provincia->name, nombreProvincia) == 0){
 			imprimirHotel(&hoteles->hoteles[n]);
 		}
+	}
+	char str[10];
+	int opcion;
+	printf("99. Menu principal\nOpcion: ");
+	fflush(stdout);
+	fgets(str, 10, stdin);
+	sscanf(str, "%d", &opcion);
+	if(opcion == 99){
+		menuAdmin(provincias, hoteles, bd);
 	}
 }
 
@@ -55,7 +65,7 @@ void menuProvinciasHoteles(Provincias* provincias, Hoteles* hoteles, sqlite3* db
 	sscanf(str, "%d", &opcion);
 	if (opcion > 0 && opcion <= n) {
 		printf("opcion provincias check\n");
-		mostrarHoteles(provincias, opcion - 1, hoteles);
+		mostrarHoteles(provincias, opcion - 1, hoteles, db);
 	} else if (opcion == n + 1) {
 		printf("\n\n\n");
 		menuAdmin(provincias, hoteles, db);
@@ -132,8 +142,9 @@ void menuEliminarHotel (Provincias* provincias, Hoteles * hoteles, sqlite3* db) 
 
 	} else if (opcion == n + 1) {
 		menuAdmin(provincias, hoteles, db);
-	} else {
-		printf("Opcion incorrecta!!!\n");
+	}
+	else {
+		printf("Opcion incorrecta!\n");
 		menuEliminarHotel(provincias, hoteles, db);
 	}
 
@@ -142,36 +153,66 @@ void menuEliminarHotel (Provincias* provincias, Hoteles * hoteles, sqlite3* db) 
 void menuAdmin(Provincias *provincias, Hoteles* hoteles, sqlite3* db) {
 	char str[10];
 	int opcion;
-	printf("============\nMENU ADMIN\n============");
+	printf("============\nMENU ADMIN\n============\n");
+	printf("v:%s", version_app);
 	printf("\n1. Mostrar hoteles existentes.\n2. Anadir hotel.");
 	printf("\n3. Eliminar hotel.\n4. Mostrar reservas realizadas por distintos usuarios.");
 	printf("\n5. Salir.\nOpcion: ");
-	fflush(stdout);
-	fgets(str, 3, stdin);
-	sscanf(str, "%d", &opcion);
-	if(opcion == 1){ //MOSTRAR HOTELES
-		menuProvinciasHoteles(provincias, hoteles, db);
-	} else if(opcion == 2){ //ANADIR HOTEL
-		Hotel hotel;
-		hotel = menuAnadirHotel(provincias);
-		imprimirHotel(&hotel);
-		insertarHotel(&hotel, db);
-	} else if(opcion == 3){ //ELIMINAR HOTEL
-		menuEliminarHotel(provincias, hoteles, db);
-	} else if(opcion == 4){ //MOSTRAR RESERVAS
-		printf("Prueba");
-	} else if(opcion == 5){ //SALIR
-		printf("\nGracias por utilizar nuestros sevicios!");
-	}else {
-		printf("\nOpcion incorrecta!!!\n");
-		menuAdmin(provincias, hoteles, db);
+
+	while(opcion < 6 || opcion > 0){
+		fflush(stdout);
+		fgets(str, 3, stdin);
+		sscanf(str, "%d", &opcion);
+		if(opcion == 1){ //MOSTRAR HOTELES
+			menuProvinciasHoteles(provincias, hoteles, db);
+		} else if(opcion == 2){ //ANADIR HOTEL
+			Hotel hotel;
+			hotel = menuAnadirHotel(provincias);
+			imprimirHotel(&hotel);
+			insertarHotel(&hotel, db);
+		} else if(opcion == 3){ //ELIMINAR HOTEL
+			menuEliminarHotel(provincias, hoteles, db);
+		} else if(opcion == 4){ //MOSTRAR RESERVAS
+			printf("Proximamente disponible...\n");
+			opcion = 5;
+		} else if (opcion == 5){ //SALIR
+			exit(EXIT_FAILURE);
+		}
 	}
+
+}
+
+void cargarPropiedades(){
+    FILE *fp;
+    char line[50];
+    char key[20];
+    char value[30];
+
+    fp = fopen("properties/configuration.properties", "r");
+    if (fp == NULL) {
+        printf("Error al abrir el archivo de configuracion\n");
+        exit(EXIT_FAILURE);
+    }
+
+    while (fgets(line, 50, fp) != NULL) {
+        if (line[0] == '#' || line[0] == '\n') {
+            continue;
+        }
+        sscanf(line, "%[^=]=%[^\n]", key, value);
+        if (strcmp(key, "bd") == 0) {
+            strcpy(BD, value);
+        } else if (strcmp(key, "version") == 0) {
+            strcpy(version_app, value);
+        }
+    }
+    fclose(fp);
 }
 
 int main(void) {
+	cargarPropiedades();
 	//INICIALIZACION DE LA BD
 	sqlite3 * db;
-	int result = sqlite3_open("bd/hotel.sqlite", &db); // &db es la dir de un puntero, por tanto es un puntero a un puntero que apunta a sqlite3
+	int result = sqlite3_open(BD, &db);
 	if (result != SQLITE_OK) {
 		logMensaje("Error opening database\n");
 	}
@@ -201,11 +242,11 @@ int main(void) {
 	//------------------------------------------------------------------
 	//CERRAR LA BD
 	result = sqlite3_close(db);
-		if (result != SQLITE_OK) {
-			logMensaje(strcat("\nError closing database\n", sqlite3_errmsg(db)));
-			return result;
-		}
-		logMensaje("\nDatabase closed\n");
+	if (result != SQLITE_OK) {
+		logMensaje(strcat("\nError closing database\n", sqlite3_errmsg(db)));
+		return result;
+	}
+	logMensaje("\nDatabase closed\n");
 	//------------------------------------------------------------------
 
 	//LIBERACION DE MEMORIA

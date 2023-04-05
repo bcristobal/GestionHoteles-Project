@@ -1,10 +1,3 @@
-/*
- * ficheros.h
- *
- *  Created on: Apr 3, 2023
- *      Author: unaialonso
- */
-
 #ifndef FICHEROS_FICHEROS_H_
 #define FICHEROS_FICHEROS_H_
 
