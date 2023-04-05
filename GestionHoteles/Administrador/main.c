@@ -6,6 +6,22 @@
 #include "../bd/base_datos.h"
 
 void menuAdmin(Provincias *provincias, Hoteles* hoteles);
+void loginAdmin (sqlite3* db);
+
+void loginAdmin (sqlite3* db) {
+	int validar;
+	char usuario[20], clave[20];
+	do {
+		printf("=================\nLOGIN\n=================\n");
+			printf("Usuario: ");
+			fflush(stdout);
+			scanf("%s", usuario);
+			printf("Clave: ");
+			fflush(stdout);
+			scanf("%s", clave);
+		validar = validadAdmin(usuario, clave, db);
+	} while (validar != 0);
+}
 
 void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles) {
 	printf("\n\n\n=================\nMOSTRAR HOTELES\n=================");
@@ -92,6 +108,9 @@ int main(void) {
 	}
 	printf("Database opened\n");
 	//------------------------------------------------------------------
+	//LOGIN
+	loginAdmin(db);
+	//------------------------------------------------------------------
 	//CREACION DE PROVINCIAS CON BD
 
 	Provincias *provincias = (Provincias *) malloc(sizeof(Provincias));
@@ -122,12 +141,12 @@ int main(void) {
 	//------------------------------------------------------------------
 
 	//LIBERACION DE MEMORIA
-	for (int i = 0; i < hoteles->numHoteles; ++i) {
-		free(&hoteles->hoteles[i].provincia);
-	}
-	for (int i = 0; i < hoteles->numHoteles; ++i) {
-		free(&hoteles->hoteles[i]);
-	}
+//	for (int i = 0; i < hoteles->numHoteles; ++i) {
+//		free(&hoteles->hoteles[i].provincia);
+//	}
+//	for (int i = 0; i < hoteles->numHoteles; ++i) {
+//		free(&hoteles->hoteles[i]);
+//	}
 	free(provincias->provincias);
 	free(provincias);
 	free(hoteles->hoteles);
