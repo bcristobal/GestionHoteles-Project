@@ -114,3 +114,71 @@ int initProvincias (Provincias* provincias, sqlite3 *db) {
 	return result;
 
 }
+
+int contarHoteles(sqlite3 *db) {
+	int contador;
+	sqlite3_stmt *stmt;
+		char sql[] = "SELECT COUNT(ID_HOTEL) FROM HOTEL";
+
+		int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
+		if (result != SQLITE_OK) {
+			printf("\nError preparing statement (SELECT)\n");
+			printf("%s\n", sqlite3_errmsg(db));
+		}
+		else {
+			printf("SQL query prepared (SELECT)\n");
+		}
+
+		result = sqlite3_step(stmt) ;
+			if (result == SQLITE_ROW) {
+				contador = sqlite3_column_int(stmt, 0);
+				printf("se copia en c\n");
+			}
+
+		result = sqlite3_finalize(stmt);
+			if (result != SQLITE_OK) {
+				printf("\nError finalizing statement (SELECT)\n");
+				printf("%s\n", sqlite3_errmsg(db));
+			}
+			else {
+				printf("Prepared statement finalized (SELECT)\n");
+			}
+
+		return contador;
+}
+
+int initHoteles (Hoteles * hoteles, sqlite3 *db) {
+	sqlite3_stmt *stmt;
+	char sql[] = "SELECT ID_HOTEL, NOM_HOTEL, NUM_ESTTRELLAS FROM HOTEL";
+
+	int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
+	if (result != SQLITE_OK) {
+		printf("Error preparing statement (SELECT)\n");
+		printf("%s\n", sqlite3_errmsg(db));
+	}
+	else {
+		printf("SQL query prepared (SELECT)\n");
+	}
+	for (int i = 0; i < (*hoteles).numHoteles; ++i) {
+		result = sqlite3_step(stmt) ;
+		if (result == SQLITE_ROW) {
+			(*hoteles).hoteles[i].id = sqlite3_column_int(stmt, 0);
+			strcpy((*hoteles).hoteles[i].name, (char *) sqlite3_column_text(stmt, 1));
+			(*hoteles).hoteles[i].estrellas = sqlite3_column_int(stmt, 2);
+		}
+	}
+
+
+
+	result = sqlite3_finalize(stmt);
+		if (result != SQLITE_OK) {
+			printf("\nError finalizing statement (SELECT)\n");
+			printf("%s\n", sqlite3_errmsg(db));
+		}
+		else {
+			printf("Prepared statement finalized (SELECT)\n");
+		}
+
+	return result;
+
+}
