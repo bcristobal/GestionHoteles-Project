@@ -104,9 +104,9 @@ int main(void) {
 	sqlite3 * db;
 	int result = sqlite3_open("bd/hotel.sqlite", &db); // &db es la dir de un puntero, por tanto es un puntero a un puntero que apunta a sqlite3
 	if (result != SQLITE_OK) {
-		printf("Error opening database\n");
+		logMensaje("Error opening database\n");
 	}
-	printf("Database opened\n");
+	logMensaje("Error opening database\n");
 	//------------------------------------------------------------------
 	//LOGIN
 	loginAdmin(db);
@@ -133,11 +133,10 @@ int main(void) {
 	//CERRAR LA BD
 	result = sqlite3_close(db);
 		if (result != SQLITE_OK) {
-			printf("\nError closing database\n");
-			printf("%s\n", sqlite3_errmsg(db));
+			logMensaje(strcat("\nError closing database\n", sqlite3_errmsg(db)));
 			return result;
 		}
-	printf("\nDatabase closed\n");
+		logMensaje("\nDatabase closed\n");
 	//------------------------------------------------------------------
 
 	//LIBERACION DE MEMORIA

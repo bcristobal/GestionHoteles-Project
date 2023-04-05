@@ -7,6 +7,7 @@
 #include <string.h>
 #include "../provincia/provincia.h"
 #include "../hotel/hotel.h"
+#include "../logger/log.h"
 
 int validadAdmin(char*, char*, sqlite3*); // 0 es valido(el resto invalido)
 int contarProvincias(sqlite3*);
