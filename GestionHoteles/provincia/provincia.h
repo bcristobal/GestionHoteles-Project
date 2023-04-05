@@ -1,12 +1,9 @@
 #ifndef PROVINCIA_H_
 #define PROVINCIA_H_
 
-#include "../hotel/hotel.h"
-
 typedef struct {
 	int id;
 	char name[20];
-	Hoteles hoteles;
 } Provincia;
 
 typedef struct {

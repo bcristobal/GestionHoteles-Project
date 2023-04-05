@@ -6,11 +6,12 @@
 #include <stdio.h>
 #include <string.h>
 #include "../provincia/provincia.h"
+#include "../hotel/hotel.h"
 
-int validadAdmin(char* usuario, char* clave, sqlite3 *db); // 0 es valido(el resto invalido)
-int contarProvincias(sqlite3 *db);
-int initProvincias (Provincias* provincias, sqlite3 *db);
-int contarHoteles(sqlite3 *db);
-int initHoteles (Hoteles * hoteles, sqlite3 *db);
+int validadAdmin(char*, char*, sqlite3*); // 0 es valido(el resto invalido)
+int contarProvincias(sqlite3*);
+int initProvincias (Provincias*, sqlite3*);
+int contarHoteles(sqlite3*);
+int initHoteles (Hoteles * hoteles, sqlite3 *db, Provincias * provincias);
 
 #endif /* BASE_DATOS_H_ */
