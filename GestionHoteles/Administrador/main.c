@@ -20,7 +20,7 @@ void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles) {
 	}
 }
 
-void menuProvinciasHoteles(Provincias *provincias, Hoteles* hoteles) {
+void menuProvinciasHoteles(Provincias* provincias, Hoteles* hoteles) {
 	char str[10];
 	int opcion;
 	printf("\n\n\n=================\nMOSTRAR HOTELES\n=================");
@@ -107,10 +107,6 @@ int main(void) {
 	initHoteles(hoteles, db, provincias);
 
 	//------------------------------------------------------------------
-	//ANADIR HOTELES A UNA PROVINCIA (para probar la funcionalidad) (sin bd)
-
-
-	//------------------------------------------------------------------
 	//INICIAR MENU
 	menuAdmin(provincias, hoteles);
 
@@ -126,14 +122,16 @@ int main(void) {
 	//------------------------------------------------------------------
 
 	//LIBERACION DE MEMORIA
-	free(provincias);
+	for (int i = 0; i < hoteles->numHoteles; ++i) {
+		free(&hoteles->hoteles[i].provincia);
+	}
+	for (int i = 0; i < hoteles->numHoteles; ++i) {
+		free(&hoteles->hoteles[i]);
+	}
 	free(provincias->provincias);
-//	free(hoteles);
-//	free(hoteles->hoteles);
-//	free(hotel1);
-//	free(hotel2);
-//	free(hotel3);
-//	free(provincias->provincias[1].hoteles.hoteles);
+	free(provincias);
+	free(hoteles->hoteles);
+	free(hoteles);
 
 	//------------------------------------------------------------------
 
