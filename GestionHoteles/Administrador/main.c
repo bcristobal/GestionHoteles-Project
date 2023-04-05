@@ -5,6 +5,8 @@
 #include "../hotel/hotel.h"
 #include "../bd/base_datos.h"
 
+int salir = 0;
+
 void menuAdmin(Provincias *provincias, Hoteles* hoteles, sqlite3* db);
 void loginAdmin (sqlite3* db);
 
@@ -107,7 +109,7 @@ void menuEliminarHotel (Provincias* provincias, Hoteles * hoteles, sqlite3* db) 
 	opcion--;
 	if (provincias->provincias[opcion].id == opcion) {
 		printf("opcion provincias check\n");
-		printf("\n\n\n=================\nMOSTRAR HOTELES\n=================");
+		printf("=================\nMOSTRAR HOTELES\n=================");
 		int j;
 		char nombreProvincia[20];
 		strcpy(nombreProvincia, provincias->provincias[opcion].name);
@@ -129,7 +131,6 @@ void menuEliminarHotel (Provincias* provincias, Hoteles * hoteles, sqlite3* db) 
 		}
 
 	} else if (opcion == n + 1) {
-		printf("\n\n\n");
 		menuAdmin(provincias, hoteles, db);
 	} else {
 		printf("Opcion incorrecta!!!\n");
@@ -143,8 +144,7 @@ void menuAdmin(Provincias *provincias, Hoteles* hoteles, sqlite3* db) {
 	int opcion;
 	printf("============\nMENU ADMIN\n============");
 	printf("\n1. Mostrar hoteles existentes.\n2. Anadir hotel.");
-	printf(
-			"\n3. Eliminar hotel.\n4. Mostrar reservas realizadas por distintos usuarios.");
+	printf("\n3. Eliminar hotel.\n4. Mostrar reservas realizadas por distintos usuarios.");
 	printf("\n5. Salir.\nOpcion: ");
 	fflush(stdout);
 	fgets(str, 3, stdin);
