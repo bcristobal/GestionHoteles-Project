@@ -6,7 +6,6 @@
  */
 
 #include "reserva.h"
-#include "fecha.h"
 
 
 void imprimirReserva(Reserva r){

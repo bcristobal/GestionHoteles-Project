@@ -8,6 +8,9 @@
 #ifndef RESERVA_RESERVA_H_
 #define RESERVA_RESERVA_H_
 
+#include "../fecha/fecha.h"
+#include <stdio.h>
+
 typedef struct{
 
 	int idRes;
