@@ -5,19 +5,23 @@
 #include "../hotel/hotel.h"
 #include "../bd/base_datos.h"
 
-void menuAdmin(Provincias *provincias);
+void menuAdmin(Provincias *provincias, Hoteles* hoteles);
 
-void mostrarHoteles(Provincias *provincias, int eleccion) {
+void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles) {
 	printf("\n\n\n=================\nMOSTRAR HOTELES\n=================");
 	int n;
-	printf("\nHoteles de la provincia de %s",
-			provincias->provincias[eleccion].name);
-	for (n = 0; n < provincias->provincias[eleccion].hoteles.numHoteles; ++n) {
-		imprimirHotel(&provincias->provincias[eleccion].hoteles.hoteles[n]);
+	char nombreProvincia[20];
+	strcpy(nombreProvincia, provincias->provincias[eleccion].name);
+	printf("\nHoteles de la provincia de %s", nombreProvincia);
+	for (n = 0; n < hoteles->numHoteles; ++n) {
+		if (hoteles->hoteles[n].provincia.name == nombreProvincia) {
+			imprimirHotel(&hoteles->hoteles[n]);
+		}
+
 	}
 }
 
-void menuProvinciasHoteles(Provincias *provincias) {
+void menuProvinciasHoteles(Provincias *provincias, Hoteles* hoteles) {
 	char str[10];
 	int opcion;
 	printf("\n\n\n=================\nMOSTRAR HOTELES\n=================");
@@ -35,18 +39,18 @@ void menuProvinciasHoteles(Provincias *provincias) {
 	sscanf(str, "%d", &opcion);
 	if (opcion > 0 && opcion <= n) {
 		printf("opcion provincias check\n");
-		mostrarHoteles(provincias, opcion - 1);
+		mostrarHoteles(provincias, opcion - 1, hoteles);
 	} else if (opcion == n + 1) {
 		printf("\n\n\n");
-		menuAdmin(provincias);
+		menuAdmin(provincias, hoteles);
 	} else {
 		printf("Opcion incorrecta!!!\n");
-		menuProvinciasHoteles(provincias);
+		menuProvinciasHoteles(provincias, hoteles);
 	}
 
 }
 
-void menuAdmin(Provincias *provincias) {
+void menuAdmin(Provincias *provincias, Hoteles* hoteles) {
 	char str[10];
 	int opcion;
 	printf("============\nMENU ADMIN\n============");
@@ -59,7 +63,7 @@ void menuAdmin(Provincias *provincias) {
 	sscanf(str, "%d", &opcion);
 	switch (opcion) {
 	case 1: //MOSTRAR HOTELES
-		menuProvinciasHoteles(provincias);
+		menuProvinciasHoteles(provincias, hoteles);
 		break;
 	case 2: //ANADIR HOTEL
 		printf("Prueba");
@@ -75,7 +79,7 @@ void menuAdmin(Provincias *provincias) {
 		break;
 	default: //ELSE
 		printf("\nOpcion incorrecta!!!\n");
-		menuAdmin(provincias);
+		menuAdmin(provincias, hoteles);
 		break;
 	}
 }
@@ -97,18 +101,17 @@ int main(void) {
 	initProvincias(provincias, db);
 
 	//------------------------------------------------------------------
-	//CREACION DE HOTELES CON BD TODO: SE NECESITAN JUNTAR HOTELES CON PROVINCIAS PARA QUE VAYA EL MENU, Y HOTELES EN SI
+	//CREACION DE HOTELES CON BD
 	Hoteles * hoteles = (Hoteles *) malloc(sizeof(Hoteles));
 	hoteles->hoteles = malloc(hoteles->numHoteles * sizeof(Hotel));
 	hoteles->numHoteles = contarHoteles(db);
-	printf("NUMERO DE HOTELES == %d\n", hoteles->numHoteles);
 	initHoteles(hoteles, db);
 
 	//------------------------------------------------------------------
 	//ANADIR HOTELES A UNA PROVINCIA (para probar la funcionalidad) (sin bd)
-	provincias->provincias[1].hoteles.hoteles = (Hotel*) malloc(3 * sizeof(Hotel));
-	provincias->provincias[1].hoteles = *hoteles;
-	provincias->provincias[1].hoteles.numHoteles = 3;
+//	provincias->provincias[1].hoteles.hoteles = (Hotel*) malloc(3 * sizeof(Hotel));
+//	provincias->provincias[1].hoteles = *hoteles;
+//	provincias->provincias[1].hoteles.numHoteles = 3;
 
 	//------------------------------------------------------------------
 	//INICIAR MENU
@@ -133,7 +136,7 @@ int main(void) {
 //	free(hotel1);
 //	free(hotel2);
 //	free(hotel3);
-	free(provincias->provincias[1].hoteles.hoteles);
+//	free(provincias->provincias[1].hoteles.hoteles);
 
 	//------------------------------------------------------------------
 

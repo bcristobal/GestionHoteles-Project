@@ -1,4 +1,3 @@
-
 #include "base_datos.h"
 #include <stdlib.h>
 
@@ -147,9 +146,9 @@ int contarHoteles(sqlite3 *db) {
 		return contador;
 }
 
-int initHoteles (Hoteles * hoteles, sqlite3 *db) {
+int initHoteles (Hoteles * hoteles, sqlite3 *db, Provincias * provincias) {
 	sqlite3_stmt *stmt;
-	char sql[] = "SELECT ID_HOTEL, NOM_HOTEL, NUM_ESTTRELLAS FROM HOTEL";
+	char sql[] = "SELECT h.ID_HOTEL, h.NOM_HOTEL, h.NUM_ESTTRELLAS, h.ID_PROV FROM HOTEL h";
 
 	int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
 	if (result != SQLITE_OK) {
@@ -165,6 +164,12 @@ int initHoteles (Hoteles * hoteles, sqlite3 *db) {
 			(*hoteles).hoteles[i].id = sqlite3_column_int(stmt, 0);
 			strcpy((*hoteles).hoteles[i].name, (char *) sqlite3_column_text(stmt, 1));
 			(*hoteles).hoteles[i].estrellas = sqlite3_column_int(stmt, 2);
+			for (int n = 0; n < contarProvincias(db); ++n) {
+				if (provincias->provincias[n].id == sqlite3_column_int(stmt, 3)) {
+					(*hoteles).hoteles[i].provincia = provincias->provincias[n];
+				}
+			}
+
 		}
 	}
 
