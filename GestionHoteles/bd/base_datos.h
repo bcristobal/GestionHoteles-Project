@@ -12,6 +12,8 @@ int validadAdmin(char*, char*, sqlite3*); // 0 es valido(el resto invalido)
 int contarProvincias(sqlite3*);
 int initProvincias (Provincias*, sqlite3*);
 int contarHoteles(sqlite3*);
-int initHoteles (Hoteles * hoteles, sqlite3 *db, Provincias * provincias);
+int initHoteles (Hoteles*, sqlite3*, Provincias*);
+int insertarHotel (Hotel *, sqlite3*, Provincia*);
+int eliminarHotel (Hotel*, sqlite3*);
 
 #endif /* BASE_DATOS_H_ */

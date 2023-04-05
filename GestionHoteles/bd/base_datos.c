@@ -88,10 +88,7 @@ int initProvincias (Provincias* provincias, sqlite3 *db) {
 	else {
 		printf("SQL query prepared (SELECT)\n");
 	}
-	//(*provincias).numProvincias = contarProvincias(db);
-	//Provincia *prov;
 	for (int i = 0; i < (*provincias).numProvincias; ++i) {
-		//prov = malloc(sizeof(Provincia));
 		result = sqlite3_step(stmt) ;
 		if (result == SQLITE_ROW) {
 			(*provincias).provincias[i].id = sqlite3_column_int(stmt, 0);
@@ -186,4 +183,76 @@ int initHoteles (Hoteles * hoteles, sqlite3 *db, Provincias * provincias) {
 
 	return result;
 
+}
+
+int insertarHotel (Hotel * hotel, sqlite3 *db, Provincia* provincia) {
+	sqlite3_stmt *stmt;
+	char sql[] = "INSERT INTO HOTEL (NOM_HOTEL, NUM_ESTTRELLAS, ID_PROV) VALUES (?, ?, ?)";
+
+	int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
+
+	if (result != SQLITE_OK) {
+		printf("Error preparing statement (SELECT)\n");
+		printf("%s\n", sqlite3_errmsg(db));
+	}
+	else {
+		printf("SQL query prepared (SELECT)\n");
+	}
+
+	result = sqlite3_bind_text(stmt, 1, hotel->name, strlen(hotel->name) + 1, SQLITE_STATIC);
+	result = sqlite3_bind_int(stmt, 2, hotel->estrellas);
+	result = sqlite3_bind_int(stmt, 3, hotel->provincia->id);
+
+	result = sqlite3_step(stmt);
+	if (result != SQLITE_DONE) {
+		printf("Error insertando el hotel\n");
+	}else{
+		printf("Hotel %s insertado\n", hotel->name);
+	}
+
+	result = sqlite3_finalize(stmt);
+	if (result != SQLITE_OK) {
+		printf("\nError finalizing statement (SELECT)\n");
+		printf("%s\n", sqlite3_errmsg(db));
+	}
+	else {
+		printf("Prepared statement finalized (SELECT)\n");
+	}
+
+	return result;
+}
+
+int eliminarHotel (Hotel * hotel, sqlite3 *db) {
+	sqlite3_stmt *stmt;
+	char sql[] = "DELETE FROM HOTEL h WHERE h.ID_HOTEL == ?";
+
+	int result = sqlite3_prepare_v2(db, sql, strlen(sql) + 1, &stmt, NULL) ;
+
+	if (result != SQLITE_OK) {
+		printf("Error preparing statement (SELECT)\n");
+		printf("%s\n", sqlite3_errmsg(db));
+	}
+	else {
+		printf("SQL query prepared (SELECT)\n");
+	}
+
+	result = sqlite3_bind_int(stmt, 1, hotel->id);
+
+	result = sqlite3_step(stmt);
+	if (result != SQLITE_DONE) {
+		printf("Error insertando el hotel\n");
+	}else{
+		printf("Hotel %s insertado\n", hotel->name);
+	}
+
+	result = sqlite3_finalize(stmt);
+	if (result != SQLITE_OK) {
+		printf("\nError finalizing statement (SELECT)\n");
+		printf("%s\n", sqlite3_errmsg(db));
+	}
+	else {
+		printf("Prepared statement finalized (SELECT)\n");
+	}
+
+	return result;
 }
