@@ -44,6 +44,7 @@ void mostrarHoteles(Provincias *provincias, int eleccion, Hoteles* hoteles, sqli
 	fgets(str, 10, stdin);
 	sscanf(str, "%d", &opcion);
 	if(opcion == 99){
+		printf("\n\n\n");
 		menuAdmin(provincias, hoteles, bd);
 	}
 }
@@ -118,7 +119,6 @@ void menuEliminarHotel (Provincias* provincias, Hoteles * hoteles, sqlite3* db) 
 	sscanf(str, "%d", &opcion);
 	opcion--;
 	if (provincias->provincias[opcion].id == opcion) {
-		printf("opcion provincias check\n");
 		printf("=================\nMOSTRAR HOTELES\n=================");
 		int j;
 		char nombreProvincia[20];
@@ -214,9 +214,9 @@ int main(void) {
 	sqlite3 * db;
 	int result = sqlite3_open(BD, &db);
 	if (result != SQLITE_OK) {
-		logMensaje("Error opening database\n");
+		logMensaje("Error opening database");
 	}
-	logMensaje("Error opening database\n");
+	logMensaje("Error opening database");
 	//------------------------------------------------------------------
 	//LOGIN
 	loginAdmin(db);
@@ -243,19 +243,13 @@ int main(void) {
 	//CERRAR LA BD
 	result = sqlite3_close(db);
 	if (result != SQLITE_OK) {
-		logMensaje(strcat("\nError closing database\n", sqlite3_errmsg(db)));
+		logMensaje(strcat("\nError closing database", sqlite3_errmsg(db)));
 		return result;
 	}
-	logMensaje("\nDatabase closed\n");
+	logMensaje("\nDatabase closed");
 	//------------------------------------------------------------------
 
 	//LIBERACION DE MEMORIA
-//	for (int i = 0; i < hoteles->numHoteles; ++i) {
-//		free(&hoteles->hoteles[i].provincia);
-//	}
-//	for (int i = 0; i < hoteles->numHoteles; ++i) {
-//		free(&hoteles->hoteles[i]);
-//	}
 	free(provincias->provincias);
 	free(provincias);
 	free(hoteles->hoteles);
