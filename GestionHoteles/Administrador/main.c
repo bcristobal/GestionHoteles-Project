@@ -187,13 +187,11 @@ void cargarPropiedades(){
     char line[50];
     char key[20];
     char value[30];
-
     fp = fopen("properties/configuration.properties", "r");
     if (fp == NULL) {
         printf("Error al abrir el archivo de configuracion\n");
         exit(EXIT_FAILURE);
     }
-
     while (fgets(line, 50, fp) != NULL) {
         if (line[0] == '#' || line[0] == '\n') {
             continue;
